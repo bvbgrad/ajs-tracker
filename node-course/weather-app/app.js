@@ -1,10 +1,27 @@
 require('dotenv').config();
 const geocode = require('./utils/geocode')
+const forecast = require('./utils/forecast')
 
+const location = process.argv[2]
+if (!location) {
+    return console.log("No location provided")
+}
 
-geocode('Boston', (error, data) => {
-    console.log('Error:', error)
-    console.log('Data:', data)
+geocode(location, (error, geocodeData) => {
+    if (error) {
+        return console.log('Error:', error)
+    }
+    // console.log('Geocode Data:', geocodeData)
+    
+    forecast(geocodeData.latitude, geocodeData.longitude, (error, forecastData) => {
+        if (error) {
+            return console.log('Error:', error)
+        }
+        // console.log('Forecast Data:', forecastData)
+        console.log('Weather report for: ', geocodeData.location)
+        console.log("It is currently " + forecastData.temperature + " degrees out.  It feels like " + forecastData.feelslike + " degrees.")
+        console.log("It is '" + forecastData.summary + "' throughout the day with a " + forecastData.precip + "% chance of rain.")
+    })
 })
 
 

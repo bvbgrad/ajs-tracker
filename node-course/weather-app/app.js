@@ -7,21 +7,22 @@ if (!location) {
     return console.log("No location provided")
 }
 
-geocode(location, (error, geocodeData) => {
+geocode(location, (error, {latitude, longitude, location} = {}) => {
     if (error) {
         return console.log('Error:', error)
+    } else {
+        // console.log('Geocode Data:', geocodeData)
+        forecast(latitude, longitude, (error, {temperature, feelslike, precip, summary}) => {
+            if (error) {
+                return console.log('Error:', error)
+            }
+            // console.log('Forecast Data:', forecastData)
+            console.log("The weather is '" + summary + "' all day for '" + location + "'.")
+            console.log("It is currently " + temperature + " degrees out.  It feels like " + feelslike + " degrees.")
+            console.log("There is a " + precip + "% chance of rain.")
+        })
     }
-    // console.log('Geocode Data:', geocodeData)
     
-    forecast(geocodeData.latitude, geocodeData.longitude, (error, forecastData) => {
-        if (error) {
-            return console.log('Error:', error)
-        }
-        // console.log('Forecast Data:', forecastData)
-        console.log('Weather report for: ', geocodeData.location)
-        console.log("It is currently " + forecastData.temperature + " degrees out.  It feels like " + forecastData.feelslike + " degrees.")
-        console.log("It is '" + forecastData.summary + "' throughout the day with a " + forecastData.precip + "% chance of rain.")
-    })
 })
 
 

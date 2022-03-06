@@ -12,10 +12,15 @@ MongoClient.connect(connectionURL,
     console.log('Connected to database')
     const db = client.db(databaseName)
 
-    db.collection('users').find({name: 'Jon'}).toArray((err, users) => {
-        if (err) {
-            return console.log('Unable to fetch data')
+   db.collection('users').updateOne({
+        _id: new ObjectID("62250887bff13b4d8212717f")
+    }, {
+        $set: {
+            name: 'Joe'
         }
-        console.log (users)
+    }).then((result) => {
+        console.log(result)
+    }).catch((error) => {
+        console.log(error)
     })
 })

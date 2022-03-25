@@ -26,6 +26,49 @@ app.post('/users', (req, res) => {
     })
 })
 
+app.get('/tasks', (req, res) => {
+    Task.find({}).then((tasks) => {
+        res.send(tasks)
+    }).catch((e) => {
+        res.status(500).send()
+    })
+})
+
+app.get('/tasks/:id', (req, res) => {
+    console.log(req.params)
+    const _id = req.params.id
+    Task.findById(_id).then((task) => {
+        console.log('task: ' + task)
+        if (!task) {
+            res.status(204).send()
+        }
+        res.send(task)
+    }).catch((e) => {
+        res.status(500).send()
+    })
+})
+
+app.get('/users', (req, res) => {
+    User.find({}).then((users) => {
+        res.send(users)
+    }).catch((e) => {
+        res.status(500).send()
+    })
+})
+
+app.get('/users/:id', (req, res) => {
+    console.log(req.params)
+    const _id = req.params.id
+    User.findById(_id).then((user) => {
+        if (!user) {
+            res.status(204).send()
+        }
+        res.send(user)
+    }).catch((e) => {
+        res.status(500).send()
+    })
+})
+
 app.listen(port, () => {
     console.log('Server is up on port ' + port)
 })

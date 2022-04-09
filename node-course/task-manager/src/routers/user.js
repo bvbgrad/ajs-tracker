@@ -1,7 +1,9 @@
 const express = require('express')
 const User = require('../models/user')
+const auth = require('../middleware/auth')
 const router = new express.Router()
 
+// Register (create) new user
 router.post('/users', async (req, res) => {
     const user = new User(req.body)
     try {
@@ -13,6 +15,7 @@ router.post('/users', async (req, res) => {
     }
 })
 
+// Login a registered used and create a fresh token
 router.post('/users/login', async (req, res) => {
     try {
         const user = await User.findByCredentials(req.body.email, req.body.password)
@@ -23,16 +26,12 @@ router.post('/users/login', async (req, res) => {
     }
 })
 
-router.get('/users', async (req, res) => {
-    try {
-        const users = await User.find({})
-        res.send(users)
-    }
-    catch(err) {
-        res.status(500).send()
-    }
+// Get my profile
+router.get('/users/me', auth, async (req, res) => {
+    res.send(req.user)
 })
 
+// Get a specific user by Id
 router.get('/users/:id', async (req, res) => {
     try {
         const _id = req.params.id
@@ -46,6 +45,7 @@ router.get('/users/:id', async (req, res) => {
     }
 })
 
+// Delete a specific user by Id
 router.delete('/users/:id', async (req, res) => {
     try {
         const user = await User.findByIdAndDelete(req.params.id)
@@ -58,6 +58,7 @@ router.delete('/users/:id', async (req, res) => {
     }
 })
 
+// Update a specific user by Id
 router.patch('/users/:id', async (req, res) => {
     const updates = Object.keys(req.body)
     const allowedUpdates = ['name', 'email', 'password', 'age']

@@ -81,7 +81,6 @@ web_modules/
 
 # dotenv environment variable files
 config/
-dev.env
 .env*
 .env.development.local
 .env.test.local
